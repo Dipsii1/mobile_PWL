@@ -55,6 +55,12 @@ export default function HomeScreen() {
           />
         </ThemedView>
 
+        <ThemedView className="self-stretch items-center gap-1 rounded-3xl border border-blue-500/20 bg-blue-500/10 p-6">
+          <ThemedText type="smallBold" className="text-blue-600 dark:text-blue-400">
+            ✅ Tailwind aktif — kartu ini distyle pakai className (Nativewind)
+          </ThemedText>
+        </ThemedView>
+
         {Platform.OS === 'web' && <WebBadge />}
       </SafeAreaView>
     </ThemedView>

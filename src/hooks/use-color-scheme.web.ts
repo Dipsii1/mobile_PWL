@@ -8,6 +8,7 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- pola hidrasi react-native-web: tandai hydrated setelah mount (butuh SSR)
     setHasHydrated(true);
   }, []);
 

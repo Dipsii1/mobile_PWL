@@ -33,6 +33,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# JetBrains IDE
+.idea/
+
 # typescript
 *.tsbuildinfo
 
