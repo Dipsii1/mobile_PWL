@@ -1,180 +1,137 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { EventRow } from '@/components/tixo/event-row';
+import { Icon } from '@/components/tixo/icon';
+import { PressableScale } from '@/components/tixo/pressable-scale';
+import { EASE_OUT, T, TAB_INSET } from '@/constants/tixo';
+import { CATEGORIES, CATEGORY_ICON, EVENTS, type Category } from '@/data/events';
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-  const theme = useTheme();
+type TileCategory = Exclude<Category, 'Semua'>;
 
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+const TILE_COLOR: Record<TileCategory, { tint: string; soft: string }> = {
+  Musik: { tint: '#5B4BFF', soft: '#ECEAFF' },
+  Olahraga: { tint: '#0EA472', soft: '#DDF6EC' },
+  Seminar: { tint: '#F08A24', soft: '#FFEEDC' },
+  Festival: { tint: '#E5487A', soft: '#FDE3EC' },
+};
+
+const TILES = CATEGORIES.filter((c): c is TileCategory => c !== 'Semua').map((c) => ({
+  name: c,
+  count: EVENTS.filter((e) => e.category === c).length,
+  ...TILE_COLOR[c],
+}));
+
+export default function ExploreScreen() {
+  const insets = useSafeAreaInsets();
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<Category>('Semua');
+
+  const q = query.trim().toLowerCase();
+  const results = EVENTS.filter(
+    (e) =>
+      (category === 'Semua' || e.category === category) &&
+      (q === '' || e.title.toLowerCase().includes(q) || e.place.toLowerCase().includes(q)),
+  );
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <View className="flex-1" style={{ backgroundColor: T.bg }}>
+      <StatusBar style="dark" />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: insets.top + 12,
+          paddingBottom: insets.bottom + TAB_INSET + 24,
+        }}
+        contentContainerClassName="px-6">
+        <Animated.View entering={FadeInDown.duration(360).easing(EASE_OUT)}>
+          <Text className="text-[28px] font-extrabold tracking-tight text-slate-900">Jelajah</Text>
+          <Text className="mt-1 text-[14px] text-slate-500">Temukan acara seru di sekitarmu.</Text>
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
+          <View className="mt-5 h-14 flex-row items-center gap-3 rounded-2xl bg-white px-4">
+            <Icon name="search" size={22} color={T.muted} />
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Cari acara atau lokasi"
+              placeholderTextColor="#A0A6B4"
+              returnKeyType="search"
+              accessibilityLabel="Cari acara"
+              className="h-full flex-1 text-[15px] font-medium text-slate-900"
+            />
+            {query.length > 0 && (
+              <Pressable
+                onPress={() => setQuery('')}
+                accessibilityLabel="Hapus pencarian"
+                accessibilityRole="button"
+                className="h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                <Icon name="close" size={16} color={T.muted} />
+              </Pressable>
+            )}
+          </View>
+        </Animated.View>
 
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+        <Animated.View
+          entering={FadeInDown.delay(100).duration(380).easing(EASE_OUT)}
+          className="mt-6 flex-row flex-wrap justify-between gap-y-3">
+          {TILES.map((tile) => {
+            const active = category === tile.name;
+            return (
+              <PressableScale
+                key={tile.name}
+                onPress={() => setCategory(active ? 'Semua' : tile.name)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+                style={{ backgroundColor: active ? tile.tint : T.card }}
+                className="h-[104px] w-[48.5%] justify-between rounded-3xl p-4">
+                <View
+                  style={{ backgroundColor: active ? 'rgba(255,255,255,0.22)' : tile.soft }}
+                  className="h-10 w-10 items-center justify-center rounded-2xl">
+                  <Icon name={CATEGORY_ICON[tile.name]} size={22} color={active ? '#fff' : tile.tint} />
+                </View>
+                <View className="flex-row items-end justify-between">
+                  <Text className={`text-[15px] font-bold ${active ? 'text-white' : 'text-slate-900'}`}>
+                    {tile.name}
+                  </Text>
+                  <Text className={`text-xs font-semibold ${active ? 'text-white/80' : 'text-slate-400'}`}>
+                    {tile.count} acara
+                  </Text>
+                </View>
+              </PressableScale>
+            );
+          })}
+        </Animated.View>
 
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
+        <Animated.View
+          layout={LinearTransition.duration(220)}
+          className="mt-7 flex-row items-center justify-between">
+          <Text className="text-lg font-extrabold text-slate-900">
+            {category === 'Semua' ? 'Semua acara' : category}
+          </Text>
+          <Text className="text-[13px] font-semibold text-slate-500">{results.length} hasil</Text>
+        </Animated.View>
 
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+        <View className="mt-3 gap-3">
+          {results.map((ev, i) => (
+            <EventRow key={ev.id} event={ev} index={i} />
+          ))}
+          {results.length === 0 && (
+            <Animated.View entering={FadeIn.duration(240)} className="items-center py-12">
+              <View
+                style={{ backgroundColor: T.accentSoft }}
+                className="h-16 w-16 items-center justify-center rounded-3xl">
+                <Icon name="search_off" size={30} color={T.accent} />
+              </View>
+              <Text className="mt-4 text-base font-bold text-slate-900">Belum ada yang cocok</Text>
+              <Text className="mt-1 text-[13px] text-slate-500">Coba kata kunci atau kategori lain.</Text>
+            </Animated.View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
-});
