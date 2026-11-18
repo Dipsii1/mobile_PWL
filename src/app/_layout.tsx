@@ -8,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { T } from '@/constants/tixo';
+import { AuthProvider, useAuth } from '@/context/auth-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,18 +24,39 @@ export default function RootLayout() {
   });
   const ready = fontsLoaded || fontError != null;
 
-  useEffect(() => {
-    if (ready) SplashScreen.hideAsync();
-  }, [ready]);
-
   if (!ready) return null;
 
   return (
-    <ThemeProvider value={TixoTheme}>
-      <Stack screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
-        <Stack.Screen name="index" />
+    <AuthProvider>
+      <ThemeProvider value={TixoTheme}>
+        <RootNavigator />
+      </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+function RootNavigator() {
+  const { token, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading) SplashScreen.hideAsync();
+  }, [isLoading]);
+
+  // Splash tetap tampil selama sesi dipulihkan dari penyimpanan.
+  if (isLoading) return null;
+
+  const signedIn = token != null;
+
+  return (
+    <Stack screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+      <Stack.Screen name="index" />
+      <Stack.Protected guard={!signedIn}>
+        <Stack.Screen name="auth" />
+        <Stack.Screen name="forgot-password" options={{ animation: 'slide_from_right' }} />
+      </Stack.Protected>
+      <Stack.Protected guard={signedIn}>
         <Stack.Screen name="(tabs)" />
-      </Stack>
-    </ThemeProvider>
+      </Stack.Protected>
+    </Stack>
   );
 }
