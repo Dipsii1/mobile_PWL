@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { Easing, FadeInUp, LinearTransition } from 'react-native-reanimated';
 
 export const T = {
@@ -23,7 +22,7 @@ export const rise = (delay = 0) => FadeInUp.delay(delay).duration(800).easing(EA
 // Transisi layout halus saat elemen muncul/hilang di sekitarnya.
 export const smoothLayout = LinearTransition.duration(420).easing(EASE_OUT);
 
-// Ruang bawah agar konten tidak tertutup tab bar native.
-export const TAB_INSET = Platform.select({ ios: 50, android: 80 }) ?? 0;
+// Ruang bawah agar konten tidak tertutup tab bar melengkung (tinggi bar 64 + jarak).
+export const TAB_INSET = 72;
 
 export const stagger = (index: number, base = 50) => Math.min(index, 6) * base;
