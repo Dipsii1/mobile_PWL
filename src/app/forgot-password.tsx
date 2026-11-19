@@ -2,21 +2,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Field } from '@/components/tixo/field';
 import { Icon } from '@/components/tixo/icon';
 import { PressableScale } from '@/components/tixo/pressable-scale';
-import { EASE_OUT, T } from '@/constants/tixo';
+import { EASE_OUT, rise, smoothLayout, T } from '@/constants/tixo';
+import { useShake } from '@/hooks/use-shake';
 import { ApiError } from '@/lib/api';
 import { AuthService } from '@/services/auth.service';
 
@@ -29,18 +22,9 @@ export default function ForgotPasswordScreen() {
   const [submitting, setSubmitting] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const shake = useSharedValue(0);
-  const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.get() }] }));
-
-  function runShake() {
-    shake.set(
-      withSequence(
-        withTiming(-8, { duration: 50 }),
-        withTiming(8, { duration: 50 }),
-        withTiming(0, { duration: 50 }),
-      ),
-    );
-  }
+  const { style: shakeStyle, shake: runShake } = useShake();
+  // Masuk bertahap, sama seperti halaman masuk/daftar.
+  const step = (i: number) => rise(i * 80);
 
   function validate() {
     return /^\S+@\S+\.\S+$/.test(email.trim()) ? undefined : 'Masukkan email yang valid.';
@@ -91,7 +75,7 @@ export default function ForgotPasswordScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: insets.bottom + 32 }}
           contentContainerClassName="px-6">
-          <View className="h-11 flex-row items-center justify-between">
+          <Animated.View entering={rise(0)} className="h-11 flex-row items-center justify-between">
             <PressableScale
               onPress={goBack}
               accessibilityLabel="Kembali"
@@ -99,20 +83,21 @@ export default function ForgotPasswordScreen() {
               className="h-11 w-11 items-center justify-center rounded-full bg-white">
               <Icon name="arrow_back" size={20} />
             </PressableScale>
-            <Text className="text-base font-extrabold tracking-tight text-slate-900">tixo</Text>
+            <Text className="text-base font-extrabold tracking-tight text-slate-900">Tixo</Text>
             <View className="h-11 w-11" />
-          </View>
+          </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.duration(360).easing(EASE_OUT)}
+            key={sentMessage ? 'icon-sent' : 'icon-form'}
+            entering={step(1)}
             style={{ backgroundColor: T.accentSoft }}
             className="mt-10 h-16 w-16 items-center justify-center rounded-3xl">
             <Icon name={sentMessage ? 'mark_email_read' : 'lock_reset'} size={30} color={T.accent} />
           </Animated.View>
 
           <Animated.View
-            key={sentMessage ? 'sent' : 'form'}
-            entering={FadeInDown.duration(300).easing(EASE_OUT)}
+            key={sentMessage ? 'title-sent' : 'title-form'}
+            entering={step(2)}
             className="mt-7">
             <Text className="text-[32px] font-extrabold leading-[38px] tracking-tight text-slate-900">
               {sentMessage ? 'Cek email\nkamu.' : 'Lupa kata\nsandi?'}
@@ -125,7 +110,7 @@ export default function ForgotPasswordScreen() {
           </Animated.View>
 
           {sentMessage ? (
-            <Animated.View entering={FadeInUp.delay(100).duration(340).easing(EASE_OUT)}>
+            <Animated.View key="body-sent" entering={step(3)}>
               <View className="mt-7 flex-row items-center gap-3 rounded-2xl bg-white px-4 py-4">
                 <Icon name="mail" size={20} color={T.muted} />
                 <Text className="flex-1 text-[15px] font-semibold text-slate-900">{email.trim()}</Text>
@@ -149,7 +134,7 @@ export default function ForgotPasswordScreen() {
               </Text>
             </Animated.View>
           ) : (
-            <Animated.View entering={FadeInUp.delay(100).duration(340).easing(EASE_OUT)}>
+            <Animated.View key="body-form" entering={step(3)}>
               <Animated.View style={shakeStyle} className="mt-7">
                 <Field
                   label="Email"
@@ -174,27 +159,38 @@ export default function ForgotPasswordScreen() {
               </Animated.View>
 
               {serverError && (
-                <Animated.View entering={FadeIn.duration(180)} className="mt-6 rounded-2xl bg-red-50 px-4 py-3">
+                <Animated.View
+                  entering={FadeInDown.duration(360).easing(EASE_OUT)}
+                  exiting={FadeOut.duration(160)}
+                  layout={smoothLayout}
+                  className="mt-6 rounded-2xl bg-red-50 px-4 py-3">
                   <Text className="text-[13px] font-medium leading-5 text-red-600">{serverError}</Text>
                 </Animated.View>
               )}
 
-              <PressableScale
-                onPress={handleSubmit}
-                disabled={submitting}
-                accessibilityRole="button"
-                accessibilityState={{ busy: submitting, disabled: submitting }}
-                style={{ backgroundColor: T.ink, opacity: submitting ? 0.7 : 1 }}
-                className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl">
-                {submitting ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <>
-                    <Text className="text-base font-bold text-white">Kirim link reset</Text>
-                    <Icon name="arrow_forward" size={20} color="#fff" />
-                  </>
-                )}
-              </PressableScale>
+              <Animated.View layout={smoothLayout}>
+                <PressableScale
+                  onPress={handleSubmit}
+                  disabled={submitting}
+                  accessibilityRole="button"
+                  accessibilityState={{ busy: submitting, disabled: submitting }}
+                  style={{ backgroundColor: T.ink, opacity: submitting ? 0.7 : 1 }}
+                  className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl">
+                  {submitting ? (
+                    <Animated.View key="busy" entering={FadeIn.duration(200)}>
+                      <ActivityIndicator color="#fff" />
+                    </Animated.View>
+                  ) : (
+                    <Animated.View
+                      key="cta"
+                      entering={FadeIn.duration(260).easing(EASE_OUT)}
+                      className="flex-row items-center gap-2">
+                      <Text className="text-base font-bold text-white">Kirim link reset</Text>
+                      <Icon name="arrow_forward" size={20} color="#fff" />
+                    </Animated.View>
+                  )}
+                </PressableScale>
+              </Animated.View>
 
               <Text
                 onPress={goBack}

@@ -51,7 +51,8 @@ function RootNavigator() {
     <Stack screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
       <Stack.Screen name="index" />
       <Stack.Protected guard={!signedIn}>
-        <Stack.Screen name="auth" />
+        <Stack.Screen name="welcome" />
+        <Stack.Screen name="auth" options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="forgot-password" options={{ animation: 'slide_from_right' }} />
       </Stack.Protected>
       <Stack.Protected guard={signedIn}>
