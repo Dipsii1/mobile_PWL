@@ -45,13 +45,13 @@ export function Field({ label, icon, error, right, onFocus, onBlur, ...input }: 
   // Cincin lembut di luar kotak saat fokus.
   const ringStyle = useAnimatedStyle(() => ({
     opacity: focus.get(),
-    borderColor: interpolateColor(invalid.get(), [0, 1], [T.accentSoft, '#FEE2E2']),
+    borderColor: interpolateColor(invalid.get(), [0, 1], [T.accentSoft, 'rgba(239,68,68,0.25)']),
     transform: [{ scale: 0.98 + focus.get() * 0.02 }],
   }));
 
   return (
     <View>
-      <Text className="mb-2 text-[13px] font-semibold text-slate-600">{label}</Text>
+      <Text className="mb-2 text-[13px] font-semibold text-muted">{label}</Text>
       <View>
         <Animated.View
           pointerEvents="none"
@@ -60,7 +60,7 @@ export function Field({ label, icon, error, right, onFocus, onBlur, ...input }: 
         <Animated.View
           style={[{ borderWidth: 1.5, backgroundColor: T.card }, boxStyle]}
           className="h-14 flex-row items-center rounded-2xl pl-4 pr-1">
-          <Icon name={icon} size={20} color={error ? ERROR : focused ? T.accent : '#9CA3AF'} />
+          <Icon name={icon} size={20} color={error ? ERROR : focused ? T.accent : T.muted} />
           <TextInput
             {...input}
             onFocus={(e) => {
@@ -71,8 +71,8 @@ export function Field({ label, icon, error, right, onFocus, onBlur, ...input }: 
               setFocused(false);
               onBlur?.(e);
             }}
-            placeholderTextColor="#A0A6B4"
-            className="h-full flex-1 px-3 text-[15px] font-medium text-slate-900"
+            placeholderTextColor="#71717A"
+            className="h-full flex-1 px-3 text-[15px] font-medium text-fg"
           />
           {right}
         </Animated.View>
@@ -82,7 +82,7 @@ export function Field({ label, icon, error, right, onFocus, onBlur, ...input }: 
           key={error}
           entering={FadeInDown.duration(260).easing(EASE_OUT)}
           exiting={FadeOut.duration(160)}
-          className="ml-1 mt-1.5 text-xs font-medium text-red-500">
+          className="ml-1 mt-1.5 text-xs font-medium text-red-400">
           {error}
         </Animated.Text>
       ) : null}

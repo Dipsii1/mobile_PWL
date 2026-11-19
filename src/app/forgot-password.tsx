@@ -59,12 +59,11 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <View className="flex-1 overflow-hidden" style={{ backgroundColor: T.bg }}>
-      <StatusBar style="dark" />
+    <View className="flex-1 overflow-hidden bg-page">
+      <StatusBar style="light" />
       <View
         pointerEvents="none"
-        style={{ backgroundColor: T.accentSoft }}
-        className="absolute -right-16 -top-10 h-56 w-56 rounded-full"
+        className="absolute -right-16 -top-10 h-56 w-56 rounded-full bg-accent-soft"
       />
 
       <KeyboardAvoidingView
@@ -80,18 +79,17 @@ export default function ForgotPasswordScreen() {
               onPress={goBack}
               accessibilityLabel="Kembali"
               accessibilityRole="button"
-              className="h-11 w-11 items-center justify-center rounded-full bg-white">
+              className="h-11 w-11 items-center justify-center rounded-full bg-card">
               <Icon name="arrow_back" size={20} />
             </PressableScale>
-            <Text className="text-base font-extrabold tracking-tight text-slate-900">Tixo</Text>
+            <Text className="text-base font-extrabold tracking-tight text-fg">Tixo</Text>
             <View className="h-11 w-11" />
           </Animated.View>
 
           <Animated.View
             key={sentMessage ? 'icon-sent' : 'icon-form'}
             entering={step(1)}
-            style={{ backgroundColor: T.accentSoft }}
-            className="mt-10 h-16 w-16 items-center justify-center rounded-3xl">
+            className="mt-10 h-16 w-16 items-center justify-center rounded-3xl bg-accent-soft">
             <Icon name={sentMessage ? 'mark_email_read' : 'lock_reset'} size={30} color={T.accent} />
           </Animated.View>
 
@@ -99,10 +97,10 @@ export default function ForgotPasswordScreen() {
             key={sentMessage ? 'title-sent' : 'title-form'}
             entering={step(2)}
             className="mt-7">
-            <Text className="text-[32px] font-extrabold leading-[38px] tracking-tight text-slate-900">
+            <Text className="text-[32px] font-extrabold leading-[38px] tracking-tight text-fg">
               {sentMessage ? 'Cek email\nkamu.' : 'Lupa kata\nsandi?'}
             </Text>
-            <Text className="mt-3 text-[15px] leading-5 text-slate-500">
+            <Text className="mt-3 text-[15px] leading-5 text-muted">
               {sentMessage
                 ? `${sentMessage}. Link berlaku selama 1 jam.`
                 : 'Masukkan email akunmu, kami akan mengirim link untuk membuat kata sandi baru.'}
@@ -111,25 +109,23 @@ export default function ForgotPasswordScreen() {
 
           {sentMessage ? (
             <Animated.View key="body-sent" entering={step(3)}>
-              <View className="mt-7 flex-row items-center gap-3 rounded-2xl bg-white px-4 py-4">
+              <View className="mt-7 flex-row items-center gap-3 rounded-2xl bg-card px-4 py-4">
                 <Icon name="mail" size={20} color={T.muted} />
-                <Text className="flex-1 text-[15px] font-semibold text-slate-900">{email.trim()}</Text>
+                <Text className="flex-1 text-[15px] font-semibold text-fg">{email.trim()}</Text>
               </View>
 
               <PressableScale
                 onPress={goBack}
                 accessibilityRole="button"
-                style={{ backgroundColor: T.ink }}
-                className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl">
-                <Text className="text-base font-bold text-white">Kembali ke halaman masuk</Text>
-                <Icon name="arrow_forward" size={20} color="#fff" />
+                className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-accent">
+                <Text className="text-base font-bold text-on-accent">Kembali ke halaman masuk</Text>
+                <Icon name="arrow_forward" size={20} color={T.onAccent} />
               </PressableScale>
 
               <Text
                 onPress={() => setSentMessage(undefined)}
                 accessibilityRole="button"
-                className="mt-5 text-center text-[13px] font-semibold"
-                style={{ color: T.accent }}>
+                className="mt-5 text-center text-[13px] font-semibold text-accent">
                 Belum menerima email? Kirim ulang
               </Text>
             </Animated.View>
@@ -163,8 +159,8 @@ export default function ForgotPasswordScreen() {
                   entering={FadeInDown.duration(360).easing(EASE_OUT)}
                   exiting={FadeOut.duration(160)}
                   layout={smoothLayout}
-                  className="mt-6 rounded-2xl bg-red-50 px-4 py-3">
-                  <Text className="text-[13px] font-medium leading-5 text-red-600">{serverError}</Text>
+                  className="mt-6 rounded-2xl bg-red-500/10 px-4 py-3">
+                  <Text className="text-[13px] font-medium leading-5 text-red-400">{serverError}</Text>
                 </Animated.View>
               )}
 
@@ -174,19 +170,19 @@ export default function ForgotPasswordScreen() {
                   disabled={submitting}
                   accessibilityRole="button"
                   accessibilityState={{ busy: submitting, disabled: submitting }}
-                  style={{ backgroundColor: T.ink, opacity: submitting ? 0.7 : 1 }}
-                  className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl">
+                  style={{ opacity: submitting ? 0.7 : 1 }}
+                  className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-accent">
                   {submitting ? (
                     <Animated.View key="busy" entering={FadeIn.duration(200)}>
-                      <ActivityIndicator color="#fff" />
+                      <ActivityIndicator color={T.onAccent} />
                     </Animated.View>
                   ) : (
                     <Animated.View
                       key="cta"
                       entering={FadeIn.duration(260).easing(EASE_OUT)}
                       className="flex-row items-center gap-2">
-                      <Text className="text-base font-bold text-white">Kirim link reset</Text>
-                      <Icon name="arrow_forward" size={20} color="#fff" />
+                      <Text className="text-base font-bold text-on-accent">Kirim link reset</Text>
+                      <Icon name="arrow_forward" size={20} color={T.onAccent} />
                     </Animated.View>
                   )}
                 </PressableScale>
@@ -195,8 +191,8 @@ export default function ForgotPasswordScreen() {
               <Text
                 onPress={goBack}
                 accessibilityRole="button"
-                className="mt-5 text-center text-[13px] font-semibold text-slate-500">
-                Ingat kata sandimu? <Text style={{ color: T.accent }}>Masuk</Text>
+                className="mt-5 text-center text-[13px] font-semibold text-muted">
+                Ingat kata sandimu? <Text className="text-accent">Masuk</Text>
               </Text>
             </Animated.View>
           )}

@@ -52,7 +52,7 @@ function validate(form: Form): Errors {
   return errors;
 }
 
-// Hanya kirim field yang berubah; string kosong = kosongkan di backend.
+// Kirim field yang berubah saja.
 function diff(initial: Form, form: Form): UpdateProfileInput {
   const input: UpdateProfileInput = {};
   const name = form.full_name.trim();
@@ -152,15 +152,14 @@ export default function EditProfileScreen() {
     }
   }
 
-  // Input paling bawah: tunggu keyboard selesai naik, lalu gulir supaya tetap terlihat.
+  // Gulir agar input bawah tidak tertutup keyboard.
   function revealBottom() {
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300);
   }
 
   return (
-    <View className="flex-1" style={{ backgroundColor: T.bg }}>
-      <StatusBar style="dark" />
-      {/* Android sudah edge-to-edge, jadi perlu 'padding' juga agar konten terdorong ke atas keyboard. */}
+    <View className="flex-1 bg-page">
+      <StatusBar style="light" />
       <KeyboardAvoidingView behavior="padding" className="flex-1">
         <ScrollView
           ref={scrollRef}
@@ -174,18 +173,18 @@ export default function EditProfileScreen() {
               onPress={() => router.back()}
               accessibilityLabel="Kembali"
               accessibilityRole="button"
-              className="h-11 w-11 items-center justify-center rounded-full bg-white">
+              className="h-11 w-11 items-center justify-center rounded-full bg-card">
               <Icon name="arrow_back" size={20} />
             </PressableScale>
-            <Text className="text-base font-extrabold tracking-tight text-slate-900">Edit profil</Text>
+            <Text className="text-base font-extrabold tracking-tight text-fg">Edit profil</Text>
             <View className="h-11 w-11" />
           </Animated.View>
 
           <Animated.View entering={rise(80)} className="mt-6">
-            <Text className="text-[28px] font-extrabold leading-[34px] tracking-tight text-slate-900">
+            <Text className="text-[28px] font-extrabold leading-[34px] tracking-tight text-fg">
               Lengkapi data{'\n'}dirimu.
             </Text>
-            <Text className="mt-2 text-[14px] leading-5 text-slate-500">
+            <Text className="mt-2 text-[14px] leading-5 text-muted">
               Data ini dipakai untuk tiket dan verifikasi saat masuk venue konser.
             </Text>
           </Animated.View>
@@ -194,12 +193,11 @@ export default function EditProfileScreen() {
             <View className="mt-16 items-center">
               {loadError ? (
                 <>
-                  <Text className="text-center text-[14px] font-medium text-red-600">{loadError}</Text>
+                  <Text className="text-center text-[14px] font-medium text-red-400">{loadError}</Text>
                   <Text
                     onPress={load}
                     accessibilityRole="button"
-                    className="mt-3 text-[14px] font-bold"
-                    style={{ color: T.accent }}>
+                    className="mt-3 text-[14px] font-bold text-accent">
                     Coba lagi
                   </Text>
                 </>
@@ -223,13 +221,13 @@ export default function EditProfileScreen() {
               />
 
               <View>
-                <Text className="mb-2 text-[13px] font-semibold text-slate-600">Email</Text>
-                <View className="h-14 flex-row items-center gap-3 rounded-2xl bg-slate-100 px-4">
-                  <Icon name="mail" size={20} color="#9CA3AF" />
-                  <Text numberOfLines={1} className="flex-1 text-[15px] font-medium text-slate-500">
+                <Text className="mb-2 text-[13px] font-semibold text-muted">Email</Text>
+                <View className="h-14 flex-row items-center gap-3 rounded-2xl bg-line px-4">
+                  <Icon name="mail" size={20} color={T.muted} />
+                  <Text numberOfLines={1} className="flex-1 text-[15px] font-medium text-muted">
                     {email}
                   </Text>
-                  <Icon name="lock" size={16} color="#9CA3AF" />
+                  <Icon name="lock" size={16} color={T.muted} />
                 </View>
               </View>
 
@@ -247,7 +245,7 @@ export default function EditProfileScreen() {
               />
 
               <View>
-                <Text className="mb-2 text-[13px] font-semibold text-slate-600">Jenis kelamin</Text>
+                <Text className="mb-2 text-[13px] font-semibold text-muted">Jenis kelamin</Text>
                 <View className="flex-row gap-2">
                   {GENDER_OPTIONS.map((option) => {
                     const selected = form.gender === option.value;
@@ -258,15 +256,11 @@ export default function EditProfileScreen() {
                         accessibilityRole="radio"
                         accessibilityState={{ selected }}
                         accessibilityLabel={option.label}
-                        style={{
-                          backgroundColor: selected ? T.accentSoft : T.card,
-                          borderColor: selected ? T.accent : T.line,
-                        }}
-                        className="h-14 flex-1 flex-row items-center justify-center gap-1.5 rounded-2xl border-[1.5px]">
+                        className={`h-14 flex-1 flex-row items-center justify-center gap-1.5 rounded-2xl border-[1.5px] ${
+                          selected ? 'border-accent bg-accent-soft' : 'border-line bg-card'
+                        }`}>
                         <Icon name={option.icon} size={18} color={selected ? T.accent : T.muted} />
-                        <Text
-                          className="text-[13px] font-bold"
-                          style={{ color: selected ? T.accent : '#475569' }}>
+                        <Text className={`text-[13px] font-bold ${selected ? 'text-accent' : 'text-muted'}`}>
                           {option.label}
                         </Text>
                       </PressableScale>
@@ -304,29 +298,29 @@ export default function EditProfileScreen() {
               entering={FadeInDown.duration(360).easing(EASE_OUT)}
               exiting={FadeOut.duration(160)}
               layout={smoothLayout}
-              className="mt-6 rounded-2xl bg-red-50 px-4 py-3">
-              <Text className="text-[13px] font-medium leading-5 text-red-600">{serverError}</Text>
+              className="mt-6 rounded-2xl bg-red-500/10 px-4 py-3">
+              <Text className="text-[13px] font-medium leading-5 text-red-400">{serverError}</Text>
             </Animated.View>
           ) : null}
         </ScrollView>
 
         {form ? (
           <View
-            style={{ paddingBottom: insets.bottom + 12, borderTopColor: T.line }}
-            className="border-t bg-white px-6 pt-3">
+            style={{ paddingBottom: insets.bottom + 12 }}
+            className="border-t border-line bg-card px-6 pt-3">
             <PressableScale
               onPress={handleSave}
               disabled={saving || !dirty}
               accessibilityRole="button"
               accessibilityState={{ busy: saving, disabled: saving || !dirty }}
-              style={{ backgroundColor: dirty ? T.ink : '#CBD5E1', opacity: saving ? 0.7 : 1 }}
-              className="h-14 flex-row items-center justify-center gap-2 rounded-2xl">
+              style={{ opacity: saving ? 0.7 : 1 }}
+              className={`h-14 flex-row items-center justify-center gap-2 rounded-2xl ${dirty ? 'bg-accent' : 'bg-line'}`}>
               {saving ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={T.onAccent} />
               ) : (
                 <>
-                  <Icon name="check" size={20} color="#fff" />
-                  <Text className="text-base font-bold text-white">Simpan perubahan</Text>
+                  <Icon name="check" size={20} color={dirty ? T.onAccent : T.muted} />
+                  <Text className={`text-base font-bold ${dirty ? 'text-on-accent' : 'text-muted'}`}>Simpan perubahan</Text>
                 </>
               )}
             </PressableScale>

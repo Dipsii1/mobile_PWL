@@ -96,7 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return AuthService.register(input);
   }
 
-  // Simpan perubahan profil lalu sinkronkan nama di sesi tersimpan.
   async function updateProfile(input: UpdateProfileInput) {
     if (!token) throw new ApiError('Sesi berakhir. Silakan masuk lagi.', 401, 'UNAUTHORIZED');
     const profile = await AuthService.updateProfile(token, input);

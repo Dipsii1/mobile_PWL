@@ -49,8 +49,8 @@ export default function WelcomeScreen() {
   const colWidth = (width - GAP * 3) / 2;
 
   return (
-    <View className="flex-1 overflow-hidden" style={{ backgroundColor: T.bg }}>
-      <StatusBar style="dark" />
+    <View className="flex-1 overflow-hidden bg-page">
+      <StatusBar style="light" />
 
       {/* Kolase foto band yang bergerak sebagai latar */}
       <Animated.View
@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
 
       <LinearGradient
         pointerEvents="none"
-        colors={['rgba(245,246,250,0.6)', 'rgba(245,246,250,0)', 'rgba(245,246,250,0.9)', T.bg]}
+        colors={['rgba(9,9,11,0.6)', 'rgba(9,9,11,0)', 'rgba(9,9,11,0.9)', T.bg]}
         locations={[0, 0.14, 0.5, 0.66]}
         style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
       />
@@ -80,15 +80,15 @@ export default function WelcomeScreen() {
       <View className="flex-1 justify-end px-6" style={{ paddingBottom: insets.bottom + 24 }}>
         <Animated.Text
           entering={rise(500)}
-          className="text-[32px] font-extrabold leading-[38px] tracking-tight text-slate-900">
+          className="text-[32px] font-extrabold leading-[38px] tracking-tight text-fg">
           Konser impianmu,
         </Animated.Text>
         <Animated.Text
           entering={rise(600)}
-          className="text-[32px] font-extrabold leading-[38px] tracking-tight text-slate-900">
+          className="text-[32px] font-extrabold leading-[38px] tracking-tight text-fg">
           lebih dekat bersama Tixo.
         </Animated.Text>
-        <Animated.Text entering={rise(720)} className="mt-3 text-[15px] leading-5 text-slate-500">
+        <Animated.Text entering={rise(720)} className="mt-3 text-[15px] leading-5 text-muted">
           Dari band legendaris hingga musisi favoritmu. Temukan konser, amankan tiket, dan nikmati
           setiap momennya bersama Tixo.
         </Animated.Text>
@@ -98,18 +98,17 @@ export default function WelcomeScreen() {
             <PressableScale
               onPress={() => router.push({ pathname: '/auth', params: { mode: 'signup' } })}
               accessibilityRole="button"
-              style={{ backgroundColor: T.ink }}
-              className="h-14 flex-row items-center justify-center gap-2 rounded-2xl">
-              <Text className="text-base font-bold text-white">Daftar sekarang</Text>
-              <Icon name="arrow_forward" size={20} color="#fff" />
+              className="h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-accent">
+              <Text className="text-base font-bold text-on-accent">Daftar sekarang</Text>
+              <Icon name="arrow_forward" size={20} color={T.onAccent} />
             </PressableScale>
           </Animated.View>
           <Animated.View entering={rise(960)}>
             <PressableScale
               onPress={() => router.push({ pathname: '/auth', params: { mode: 'login' } })}
               accessibilityRole="button"
-              className="h-14 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-              <Text className="text-base font-bold text-slate-900">Saya sudah punya akun</Text>
+              className="h-14 items-center justify-center rounded-2xl border border-line bg-card">
+              <Text className="text-base font-bold text-fg">Saya sudah punya akun</Text>
             </PressableScale>
           </Animated.View>
         </View>
@@ -153,7 +152,7 @@ function MarqueeColumn({ photos, width, viewport, direction, paused }: MarqueePr
         photos.map((photo) => (
           <View
             key={`${copy}-${photo.name}`}
-            className="overflow-hidden rounded-3xl bg-slate-200"
+            className="overflow-hidden rounded-3xl bg-line"
             style={{ height: width * photo.ratio }}>
             <Image
               source={photo.source}

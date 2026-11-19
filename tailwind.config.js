@@ -8,7 +8,22 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
-    extend: {},
+    extend: {
+      // Dari variabel di src/global.css
+      colors: {
+        page: 'rgb(var(--color-page) / <alpha-value>)',
+        card: 'rgb(var(--color-card) / <alpha-value>)',
+        line: 'rgb(var(--color-line) / <alpha-value>)',
+        accent: {
+          DEFAULT: 'rgb(var(--color-accent) / <alpha-value>)',
+          soft: 'rgb(var(--color-accent) / 0.15)',
+        },
+        glow: 'rgb(var(--color-glow) / <alpha-value>)',
+        fg: 'rgb(var(--color-fg) / <alpha-value>)',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
+      },
+    },
   },
   plugins: [],
 };

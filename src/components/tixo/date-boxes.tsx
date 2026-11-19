@@ -7,7 +7,7 @@ import { maskDate } from '@/lib/profile';
 
 type DateBoxesProps = {
   label: string;
-  /** Format "DD/MM/YYYY" (boleh sebagian saat diketik). */
+  /** "DD/MM/YYYY" */
   value: string;
   onChange: (value: string) => void;
   error?: string;
@@ -16,15 +16,13 @@ type DateBoxesProps = {
 };
 
 const ERROR = '#EF4444';
-// Kelompok kotak: HH / BB / TTTT.
 const GROUPS = [
   { caption: 'Tanggal', start: 0, length: 2 },
   { caption: 'Bulan', start: 2, length: 2 },
   { caption: 'Tahun', start: 4, length: 4 },
 ] as const;
 
-// Satu TextInput tersembunyi menangkap ketikan; kotak-kotak hanya menampilkan digitnya,
-// jadi pindah kotak & hapus mundur berjalan otomatis seperti input OTP.
+// Satu TextInput tersembunyi, kotak hanya menampilkan digit (seperti input OTP).
 export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }: DateBoxesProps) {
   const input = useRef<ComponentRef<typeof TextInput>>(null);
   const [focused, setFocused] = useState(false);
@@ -34,7 +32,7 @@ export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }:
   return (
     <View>
       <View className="mb-2 flex-row items-center justify-between">
-        <Text className="text-[13px] font-semibold text-slate-600">{label}</Text>
+        <Text className="text-[13px] font-semibold text-muted">{label}</Text>
         {digits.length > 0 ? (
           <Text
             onPress={() => {
@@ -42,8 +40,7 @@ export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }:
               input.current?.focus();
             }}
             accessibilityRole="button"
-            className="text-[12px] font-bold"
-            style={{ color: T.accent }}>
+            className="text-[12px] font-bold text-accent">
             Hapus
           </Text>
         ) : null}
@@ -56,7 +53,7 @@ export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }:
         {GROUPS.map((group, groupIndex) => (
           <View key={group.caption} className="flex-row items-start" style={{ flex: group.length }}>
             {groupIndex > 0 ? (
-              <Text className="mx-1 h-11 text-center text-[17px] font-bold leading-[44px] text-slate-300">/</Text>
+              <Text className="mx-1 h-11 text-center text-[17px] font-bold leading-[44px] text-muted/50">/</Text>
             ) : null}
             <View className="flex-1">
               <View className="flex-row gap-1">
@@ -64,21 +61,21 @@ export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }:
                   const index = group.start + i;
                   const char = digits[index];
                   const current = focused && index === active;
-                  const borderColor = error ? ERROR : current ? T.accent : char ? '#C7CBD6' : T.line;
+                  const borderColor = error ? ERROR : current ? T.accent : char ? '#3F3F46' : T.line;
                   return (
                     <View
                       key={index}
-                      style={{ borderColor, backgroundColor: current ? T.accentSoft : T.card }}
-                      className="h-11 flex-1 items-center justify-center rounded-lg border-[1.5px]">
-                      <Text className="text-[16px] font-extrabold text-slate-900">{char ?? ''}</Text>
+                      style={{ borderColor }}
+                      className={`h-11 flex-1 items-center justify-center rounded-lg border-[1.5px] ${current ? 'bg-accent-soft' : 'bg-card'}`}>
+                      <Text className="text-[16px] font-extrabold text-fg">{char ?? ''}</Text>
                       {current && !char ? (
-                        <View style={{ backgroundColor: T.accent }} className="absolute h-5 w-0.5 rounded-full" />
+                        <View className="absolute h-5 w-0.5 rounded-full bg-accent" />
                       ) : null}
                     </View>
                   );
                 })}
               </View>
-              <Text className="mt-1 text-center text-[10px] font-medium text-slate-400">{group.caption}</Text>
+              <Text className="mt-1 text-center text-[10px] font-medium text-muted">{group.caption}</Text>
             </View>
           </View>
         ))}
@@ -106,7 +103,7 @@ export function DateBoxes({ label, value, onChange, error, autoFocus, onFocus }:
           key={error}
           entering={FadeInDown.duration(260).easing(EASE_OUT)}
           exiting={FadeOut.duration(160)}
-          className="ml-1 mt-1.5 text-xs font-medium text-red-500">
+          className="ml-1 mt-1.5 text-xs font-medium text-red-400">
           {error}
         </Animated.Text>
       ) : null}

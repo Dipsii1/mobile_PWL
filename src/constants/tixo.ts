@@ -1,14 +1,16 @@
 import { Easing, FadeInUp, LinearTransition } from 'react-native-reanimated';
 
+// Salinan palet global.css untuk prop yang butuh nilai JS (Icon, SVG, animasi).
 export const T = {
-  bg: '#F5F6FA',
-  card: '#FFFFFF',
-  ink: '#0E1525',
-  muted: '#6B7280',
-  line: '#E6E8EF',
-  accent: '#5B4BFF',
-  accentSoft: '#ECEAFF',
-  lime: '#D4F66B',
+  bg: '#09090B',
+  card: '#141417',
+  line: '#27272A',
+  fg: '#FFFFFF',
+  muted: '#A1A1AA',
+  accent: '#FF4D00',
+  glow: '#FF7A00',
+  accentSoft: 'rgba(255,77,0,0.15)',
+  onAccent: '#09090B',
 } as const;
 
 export const EASE_OUT = Easing.bezier(0.22, 1, 0.36, 1);

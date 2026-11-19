@@ -137,7 +137,7 @@ function CurvedBar({ children, style: _ignored, ...props }: ViewProps & { childr
           entering={ZoomIn.duration(300).easing(EASE_OUT)}
           style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
           className="items-center justify-center">
-          <Icon name={active.icon} size={26} color="#fff" filled />
+          <Icon name={active.icon} size={26} color={T.onAccent} filled />
         </Animated.View>
       </Animated.View>
 

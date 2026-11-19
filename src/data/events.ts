@@ -36,8 +36,8 @@ export const EVENTS: TixoEvent[] = [
     place: 'Istora Senayan, Jakarta',
     price: 'Rp150.000',
     icon: 'music_note',
-    tint: '#5B4BFF',
-    tintSoft: '#ECEAFF',
+    tint: '#FF4D00',
+    tintSoft: '#FF4D0026',
   },
   {
     id: '2',
@@ -50,7 +50,7 @@ export const EVENTS: TixoEvent[] = [
     price: 'Rp75.000',
     icon: 'sports_soccer',
     tint: '#0EA472',
-    tintSoft: '#DDF6EC',
+    tintSoft: '#0EA47226',
   },
   {
     id: '3',
@@ -62,8 +62,8 @@ export const EVENTS: TixoEvent[] = [
     place: 'Aula SMK Nusantara',
     price: 'Gratis',
     icon: 'school',
-    tint: '#F08A24',
-    tintSoft: '#FFEEDC',
+    tint: '#2563EB',
+    tintSoft: '#2563EB26',
   },
   {
     id: '4',
@@ -76,7 +76,7 @@ export const EVENTS: TixoEvent[] = [
     price: 'Rp25.000',
     icon: 'celebration',
     tint: '#E5487A',
-    tintSoft: '#FDE3EC',
+    tintSoft: '#E5487A26',
   },
   {
     id: '5',
@@ -88,8 +88,8 @@ export const EVENTS: TixoEvent[] = [
     place: 'Kopi Ruang, Bandung',
     price: 'Rp50.000',
     icon: 'piano',
-    tint: '#5B4BFF',
-    tintSoft: '#ECEAFF',
+    tint: '#FF4D00',
+    tintSoft: '#FF4D0026',
   },
   {
     id: '6',
@@ -102,6 +102,6 @@ export const EVENTS: TixoEvent[] = [
     price: 'Rp120.000',
     icon: 'directions_run',
     tint: '#0EA472',
-    tintSoft: '#DDF6EC',
+    tintSoft: '#0EA47226',
   },
 ];
