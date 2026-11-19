@@ -19,6 +19,9 @@ export function Icon({ name, size = 22, color = '#0E1525', filled = false }: Ico
         width: size,
         height: size,
         textAlign: 'center',
+        textAlignVertical: 'center',
+        // Android menambah padding font di atas/bawah glyph — bikin ikon tidak center.
+        includeFontPadding: false,
         color,
       }}>
       {name}

@@ -148,7 +148,7 @@ function MarqueeColumn({ photos, width, viewport, direction, paused }: MarqueePr
   });
 
   return (
-    <Animated.View style={[{ width, gap: GAP }, style]}>
+    <Animated.View renderToHardwareTextureAndroid style={[{ width, gap: GAP }, style]}>
       {Array.from({ length: copies }, (_, copy) =>
         photos.map((photo) => (
           <View
@@ -158,6 +158,9 @@ function MarqueeColumn({ photos, width, viewport, direction, paused }: MarqueePr
             <Image
               source={photo.source}
               resizeMode="cover"
+              // Android: decode seukuran tampilan & tanpa fade bawaan per salinan foto.
+              resizeMethod="resize"
+              fadeDuration={0}
               className="h-full w-full"
               accessibilityLabel={copy === 0 ? photo.name : undefined}
               accessibilityElementsHidden={copy > 0}
