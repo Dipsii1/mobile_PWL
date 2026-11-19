@@ -18,6 +18,7 @@ import { EventRow } from '@/components/tixo/event-row';
 import { Icon } from '@/components/tixo/icon';
 import { PressableScale } from '@/components/tixo/pressable-scale';
 import { EASE_OUT, T, TAB_INSET } from '@/constants/tixo';
+import { useAuth } from '@/context/auth-context';
 import { CATEGORIES, CATEGORY_ICON, EVENTS, type Category, type TixoEvent } from '@/data/events';
 
 const GAP = 12;
@@ -77,6 +78,7 @@ function Dot({ index, width, scrollX }: CarouselProps) {
 }
 
 export default function HomeScreen() {
+  const { signOut } = useAuth();
   const insets = useSafeAreaInsets();
   const { width: screenW } = useWindowDimensions();
   const cardW = screenW - 48;
@@ -183,11 +185,11 @@ export default function HomeScreen() {
 
         <View className="mt-6 items-center">
           <PressableScale
-            onPress={() => router.push('/')}
-            accessibilityRole="link"
+            onPress={signOut}
+            accessibilityRole="button"
             className="flex-row items-center gap-1.5 rounded-full bg-white px-4 py-2.5">
             <Icon name="logout" size={16} color={T.muted} />
-            <Text className="text-[13px] font-semibold text-slate-500">Halaman masuk / daftar</Text>
+            <Text className="text-[13px] font-semibold text-slate-500">Keluar</Text>
           </PressableScale>
         </View>
       </ScrollView>
