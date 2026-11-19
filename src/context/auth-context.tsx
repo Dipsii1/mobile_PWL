@@ -3,7 +3,14 @@ import { createContext, use, useEffect, useState, type ReactNode } from 'react';
 import { ApiError } from '@/lib/api';
 import { deleteItem, getItem, setItem } from '@/lib/token-storage';
 import { AuthService } from '@/services/auth.service';
-import type { AuthUser, LoginInput, RegisterInput, RegisterResult } from '@/types/auth.types';
+import type {
+  AuthUser,
+  LoginInput,
+  ProfileResult,
+  RegisterInput,
+  RegisterResult,
+  UpdateProfileInput,
+} from '@/types/auth.types';
 
 const TOKEN_KEY = 'tixo.accessToken';
 const USER_KEY = 'tixo.user';
@@ -15,6 +22,7 @@ type AuthContextValue = {
   signIn: (input: LoginInput) => Promise<void>;
   signUp: (input: RegisterInput) => Promise<RegisterResult>;
   signOut: () => Promise<void>;
+  updateProfile: (input: UpdateProfileInput) => Promise<ProfileResult>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -88,6 +96,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return AuthService.register(input);
   }
 
+  // Simpan perubahan profil lalu sinkronkan nama di sesi tersimpan.
+  async function updateProfile(input: UpdateProfileInput) {
+    if (!token) throw new ApiError('Sesi berakhir. Silakan masuk lagi.', 401, 'UNAUTHORIZED');
+    const profile = await AuthService.updateProfile(token, input);
+    if (user) {
+      await saveSession(token, { ...user, full_name: profile.full_name ?? user.full_name, email: profile.email });
+    }
+    return profile;
+  }
+
   async function signOut() {
     try {
       if (token) await AuthService.logout(token);
@@ -98,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext value={{ user, token, isLoading, signIn, signUp, signOut }}>{children}</AuthContext>
+    <AuthContext value={{ user, token, isLoading, signIn, signUp, signOut, updateProfile }}>{children}</AuthContext>
   );
 }
 

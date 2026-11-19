@@ -50,6 +50,17 @@ export type ProfileResult = {
   city_id: string | null;
 };
 
+export type Gender = 'male' | 'female' | 'other';
+
+// PATCH /auth/me — field yang tidak dikirim tidak diubah, null = kosongkan.
+export type UpdateProfileInput = {
+  full_name?: string;
+  phone?: string | null;
+  gender?: Gender | null;
+  birth_date?: string | null; // YYYY-MM-DD
+  address?: string | null;
+};
+
 export type MessageResult = {
   message: string;
 };
