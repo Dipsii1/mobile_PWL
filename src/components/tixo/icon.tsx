@@ -8,7 +8,7 @@ type IconProps = {
 };
 
 // Font Material Symbols dimuat sekali di src/app/_layout.tsx.
-export function Icon({ name, size = 22, color = '#0E1525', filled = false }: IconProps) {
+export function Icon({ name, size = 22, color = '#FFFFFF', filled = false }: IconProps) {
   return (
     <Text
       accessible={false}

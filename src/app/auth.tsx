@@ -180,12 +180,11 @@ export default function AuthScreen() {
   const copy = COPY[mode];
 
   return (
-    <View className="flex-1 overflow-hidden" style={{ backgroundColor: T.bg }}>
-      <StatusBar style="dark" />
+    <View className="flex-1 overflow-hidden bg-page">
+      <StatusBar style="light" />
       <View
         pointerEvents="none"
-        style={{ backgroundColor: T.accentSoft }}
-        className="absolute -right-16 -top-10 h-56 w-56 rounded-full"
+        className="absolute -right-16 -top-10 h-56 w-56 rounded-full bg-accent-soft"
       />
 
       <KeyboardAvoidingView
@@ -202,13 +201,13 @@ export default function AuthScreen() {
                 onPress={() => router.canGoBack() && router.back()}
                 accessibilityLabel="Kembali"
                 accessibilityRole="button"
-                className="h-11 w-11 items-center justify-center rounded-full bg-white">
+                className="h-11 w-11 items-center justify-center rounded-full bg-card">
                 <Icon name="arrow_back" size={20} />
               </PressableScale>
             ) : (
               <View className="h-11 w-11" />
             )}
-            <Text className="text-base font-extrabold tracking-tight text-slate-900">Tixo</Text>
+            <Text className="text-base font-extrabold tracking-tight text-fg">Tixo</Text>
             <View className="h-11 w-11" />
           </Animated.View>
 
@@ -218,20 +217,20 @@ export default function AuthScreen() {
               entering={titleEnter(mode)}
               exiting={titleExit(mode)}
               className="absolute inset-x-0 top-0">
-              <Text className="text-[32px] font-extrabold leading-[38px] tracking-tight text-slate-900">
+              <Text className="text-[32px] font-extrabold leading-[38px] tracking-tight text-fg">
                 {copy.title}
               </Text>
-              <Text className="mt-3 text-[15px] leading-5 text-slate-500">{copy.subtitle}</Text>
+              <Text className="mt-3 text-[15px] leading-5 text-muted">{copy.subtitle}</Text>
             </Animated.View>
           </Animated.View>
 
           <Animated.View
             entering={rise(160)}
             onLayout={(e) => segWidth.set(e.nativeEvent.layout.width)}
-            className="mt-4 flex-row rounded-2xl bg-slate-200/70 p-1">
+            className="mt-4 flex-row rounded-2xl bg-line p-1">
             <Animated.View
               style={indicatorStyle}
-              className="absolute bottom-1 left-1 top-1 rounded-xl bg-white"
+              className="absolute bottom-1 left-1 top-1 rounded-xl bg-card"
             />
             {(['login', 'signup'] as const).map((m) => (
               <Pressable
@@ -241,7 +240,7 @@ export default function AuthScreen() {
                 accessibilityState={{ selected: mode === m }}
                 className="z-10 flex-1 items-center py-3">
                 <Text
-                  className={`text-sm font-bold ${mode === m ? 'text-slate-900' : 'text-slate-500'}`}>
+                  className={`text-sm font-bold ${mode === m ? 'text-fg' : 'text-muted'}`}>
                   {m === 'login' ? 'Masuk' : 'Daftar'}
                 </Text>
               </Pressable>
@@ -319,7 +318,7 @@ export default function AuthScreen() {
                       <Icon
                         name={showPassword ? 'visibility' : 'visibility_off'}
                         size={20}
-                        color="#9CA3AF"
+                        color={T.muted}
                       />
                     </Pressable>
                   }
@@ -332,8 +331,7 @@ export default function AuthScreen() {
                   exiting={FadeOut.duration(140)}
                   onPress={handleForgotPassword}
                   accessibilityRole="button"
-                  className="self-end text-[13px] font-semibold"
-                  style={{ color: T.accent }}>
+                  className="self-end text-[13px] font-semibold text-accent">
                   Lupa kata sandi?
                 </Animated.Text>
               )}
@@ -346,11 +344,11 @@ export default function AuthScreen() {
               exiting={FadeOut.duration(160)}
               layout={layout}
               className={`mt-6 rounded-2xl px-4 py-3 ${
-                notice.tone === 'error' ? 'bg-red-50' : 'bg-emerald-50'
+                notice.tone === 'error' ? 'bg-red-500/10' : 'bg-emerald-500/10'
               }`}>
               <Text
                 className={`text-[13px] font-medium leading-5 ${
-                  notice.tone === 'error' ? 'text-red-600' : 'text-emerald-700'
+                  notice.tone === 'error' ? 'text-red-400' : 'text-emerald-400'
                 }`}>
                 {notice.text}
               </Text>
@@ -358,8 +356,7 @@ export default function AuthScreen() {
                 <Text
                   onPress={handleResendVerification}
                   accessibilityRole="button"
-                  className="mt-1 text-[13px] font-bold"
-                  style={{ color: T.accent }}>
+                  className="mt-1 text-[13px] font-bold text-accent">
                   Kirim ulang email verifikasi
                 </Text>
               )}
@@ -372,24 +369,24 @@ export default function AuthScreen() {
               disabled={submitting}
               accessibilityRole="button"
               accessibilityState={{ busy: submitting, disabled: submitting }}
-              style={{ backgroundColor: T.ink, opacity: submitting ? 0.7 : 1 }}
-              className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl">
+              style={{ opacity: submitting ? 0.7 : 1 }}
+              className="mt-8 h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-accent">
               {submitting ? (
                 <Animated.View key="busy" entering={FadeIn.duration(200)}>
-                  <ActivityIndicator color="#fff" />
+                  <ActivityIndicator color={T.onAccent} />
                 </Animated.View>
               ) : (
                 <Animated.View
                   key={`cta-${mode}`}
                   entering={FadeIn.duration(260).easing(EASE_OUT)}
                   className="flex-row items-center gap-2">
-                  <Text className="text-base font-bold text-white">{copy.cta}</Text>
-                  <Icon name="arrow_forward" size={20} color="#fff" />
+                  <Text className="text-base font-bold text-on-accent">{copy.cta}</Text>
+                  <Icon name="arrow_forward" size={20} color={T.onAccent} />
                 </Animated.View>
               )}
             </PressableScale>
 
-            <Text className="mt-5 text-center text-xs leading-5 text-slate-400">
+            <Text className="mt-5 text-center text-xs leading-5 text-muted">
               Dengan melanjutkan, kamu menyetujui ketentuan layanan tixo.
             </Text>
           </Animated.View>

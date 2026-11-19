@@ -3,6 +3,16 @@
 @tailwind utilities;
 
 :root {
+  /* Palet Neon Blaze (RGB). Ubah juga T di src/constants/tixo.ts. */
+  --color-page: 9 9 11; /* #09090B pitch black */
+  --color-card: 20 20 23; /* #141417 onyx dark */
+  --color-line: 39 39 42; /* #27272A garis/permukaan naik */
+  --color-accent: 255 77 0; /* #FF4D00 electric blaze */
+  --color-glow: 255 122 0; /* #FF7A00 hyper tangerine */
+  --color-fg: 255 255 255; /* #FFFFFF teks utama */
+  --color-muted: 161 161 170; /* #A1A1AA teks sekunder */
+  --color-on-accent: 9 9 11; /* #09090B teks di atas oranye */
+
   --font-display:
     Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
     Segoe UI Symbol, Noto Color Emoji;

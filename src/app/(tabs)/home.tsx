@@ -56,8 +56,8 @@ function FeaturedCard({ event, index, width, scrollX }: CarouselProps & { event:
           </Text>
           <View className="mt-3 flex-row items-center justify-between">
             <Text className="text-[13px] font-medium text-white/85">{event.date}</Text>
-            <View style={{ backgroundColor: T.lime }} className="rounded-full px-3 py-1.5">
-              <Text className="text-xs font-extrabold text-slate-900">{event.price}</Text>
+            <View className="rounded-full px-3 py-1.5 bg-accent">
+              <Text className="text-xs font-extrabold text-on-accent">{event.price}</Text>
             </View>
           </View>
         </View>
@@ -74,7 +74,7 @@ function Dot({ index, width, scrollX }: CarouselProps) {
       opacity: interpolate(d, [0, 1], [1, 0.35], Extrapolation.CLAMP),
     };
   });
-  return <Animated.View style={[style, { backgroundColor: T.ink }]} className="h-1.5 rounded-full" />;
+  return <Animated.View style={[style, { backgroundColor: T.accent }]} className="h-1.5 rounded-full" />;
 }
 
 export default function HomeScreen() {
@@ -92,8 +92,8 @@ export default function HomeScreen() {
   const upcoming = EVENTS.filter((e) => category === 'Semua' || e.category === category);
 
   return (
-    <View className="flex-1" style={{ backgroundColor: T.bg }}>
-      <StatusBar style="dark" />
+    <View className="flex-1 bg-page">
+      <StatusBar style="light" />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -103,17 +103,17 @@ export default function HomeScreen() {
         <Animated.View entering={FadeInDown.duration(360).easing(EASE_OUT)}>
           <View className="flex-row items-center justify-between px-6">
             <View>
-              <Text className="text-[13px] font-medium text-slate-500">Halo, selamat datang</Text>
-              <Text className="mt-0.5 text-2xl font-extrabold tracking-tight text-slate-900">
+              <Text className="text-[13px] font-medium text-muted">Halo, selamat datang</Text>
+              <Text className="mt-0.5 text-2xl font-extrabold tracking-tight text-fg">
                 Mau ke mana hari ini?
               </Text>
             </View>
             <PressableScale
               accessibilityLabel="Notifikasi"
               accessibilityRole="button"
-              className="h-12 w-12 items-center justify-center rounded-full bg-white">
+              className="h-12 w-12 items-center justify-center rounded-full bg-card">
               <Icon name="notifications" size={22} />
-              <View style={{ backgroundColor: T.accent }} className="absolute right-3 top-3 h-2 w-2 rounded-full" />
+              <View className="absolute right-3 top-3 h-2 w-2 rounded-full bg-accent" />
             </PressableScale>
           </View>
 
@@ -122,10 +122,10 @@ export default function HomeScreen() {
               scaleTo={0.98}
               onPress={() => router.navigate('/explore')}
               accessibilityRole="search"
-              className="h-14 flex-row items-center gap-3 rounded-2xl bg-white px-4">
+              className="h-14 flex-row items-center gap-3 rounded-2xl bg-card px-4">
               <Icon name="search" size={22} color={T.muted} />
-              <Text className="flex-1 text-[15px] text-slate-400">Cari konser, seminar, festival…</Text>
-              <View style={{ backgroundColor: T.accentSoft }} className="h-9 w-9 items-center justify-center rounded-xl">
+              <Text className="flex-1 text-[15px] text-muted">Cari konser, seminar, festival…</Text>
+              <View className="h-9 w-9 items-center justify-center rounded-xl bg-accent-soft">
                 <Icon name="tune" size={18} color={T.accent} />
               </View>
             </PressableScale>
@@ -134,8 +134,8 @@ export default function HomeScreen() {
 
         <Animated.View entering={FadeInDown.delay(100).duration(400).easing(EASE_OUT)}>
           <View className="mt-7 flex-row items-end justify-between px-6">
-            <Text className="text-lg font-extrabold text-slate-900">Unggulan</Text>
-            <Text className="text-[13px] font-semibold" style={{ color: T.accent }}>
+            <Text className="text-lg font-extrabold text-fg">Unggulan</Text>
+            <Text className="text-[13px] font-semibold text-accent">
               Lihat semua
             </Text>
           </View>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
             ))}
           </View>
 
-          <Text className="mt-7 px-6 text-lg font-extrabold text-slate-900">Segera hadir</Text>
+          <Text className="mt-7 px-6 text-lg font-extrabold text-fg">Segera hadir</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -187,9 +187,9 @@ export default function HomeScreen() {
           <PressableScale
             onPress={signOut}
             accessibilityRole="button"
-            className="flex-row items-center gap-1.5 rounded-full bg-white px-4 py-2.5">
+            className="flex-row items-center gap-1.5 rounded-full bg-card px-4 py-2.5">
             <Icon name="logout" size={16} color={T.muted} />
-            <Text className="text-[13px] font-semibold text-slate-500">Keluar</Text>
+            <Text className="text-[13px] font-semibold text-muted">Keluar</Text>
           </PressableScale>
         </View>
       </ScrollView>

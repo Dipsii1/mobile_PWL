@@ -1,6 +1,6 @@
 import type { Gender, ProfileResult } from '@/types/auth.types';
 
-// Nama role & gender mengikuti Backend_UKK (roles: buyer/organizer/admin, enum Gender).
+// Mengikuti role & enum Gender di backend.
 export const ROLE_LABEL: Record<string, string> = {
   buyer: 'Pecinta Konser',
   organizer: 'Penyelenggara Acara',
@@ -17,7 +17,6 @@ export const GENDER_LABEL: Record<string, string> = Object.fromEntries(
   GENDER_OPTIONS.map((option) => [option.value, option.label]),
 );
 
-// Field profil yang bisa dilengkapi pengguna dari aplikasi.
 export type ProfileField = 'full_name' | 'phone' | 'gender' | 'birth_date' | 'address';
 
 export const PROFILE_FIELDS: { key: ProfileField; label: string; icon: string }[] = [
@@ -49,7 +48,7 @@ export function formatDate(value: string | null | undefined) {
   return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 
-// ISO dari backend -> "DD/MM/YYYY" untuk input.
+// ISO -> "DD/MM/YYYY"
 export function isoToInput(value: string | null | undefined) {
   if (!value) return '';
   const date = new Date(value);
@@ -59,7 +58,7 @@ export function isoToInput(value: string | null | undefined) {
   return `${dd}/${mm}/${date.getUTCFullYear()}`;
 }
 
-// Sisipkan "/" otomatis saat mengetik tanggal: 10032005 -> 10/03/2005.
+// 10032005 -> 10/03/2005
 export function maskDate(text: string) {
   const digits = text.replace(/\D/g, '').slice(0, 8);
   if (digits.length <= 2) return digits;
@@ -67,7 +66,7 @@ export function maskDate(text: string) {
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 }
 
-// "DD/MM/YYYY" -> "YYYY-MM-DD", atau null bila tanggal tidak valid.
+// "DD/MM/YYYY" -> "YYYY-MM-DD" (null jika tidak valid)
 export function inputToIso(value: string) {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
   if (!match) return null;

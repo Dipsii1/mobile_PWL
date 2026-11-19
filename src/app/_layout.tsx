@@ -3,18 +3,19 @@ import '@/global.css';
 import { MaterialSymbols_400Regular } from '@expo-google-fonts/material-symbols/400Regular';
 import { MaterialSymbols_400Regular_Filled } from '@expo-google-fonts/material-symbols/400Regular_Filled';
 import { useFonts } from '@expo-google-fonts/material-symbols/useFonts';
-import { DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
+import { DialogProvider } from '@/components/tixo/dialog';
 import { T } from '@/constants/tixo';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 
 SplashScreen.preventAutoHideAsync();
 
 const TixoTheme = {
-  ...DefaultTheme,
-  colors: { ...DefaultTheme.colors, background: T.bg, card: T.card, primary: T.accent },
+  ...DarkTheme,
+  colors: { ...DarkTheme.colors, background: T.bg, card: T.card, primary: T.accent },
 };
 
 export default function RootLayout() {
@@ -29,7 +30,9 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider value={TixoTheme}>
-        <RootNavigator />
+        <DialogProvider>
+          <RootNavigator />
+        </DialogProvider>
       </ThemeProvider>
     </AuthProvider>
   );

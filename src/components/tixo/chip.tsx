@@ -18,10 +18,9 @@ export function Chip({ label, icon, selected, onPress }: ChipProps) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      style={{ backgroundColor: selected ? T.ink : T.card }}
-      className="h-10 flex-row items-center gap-1.5 rounded-full px-4">
-      {icon ? <Icon name={icon} size={18} color={selected ? '#fff' : T.muted} /> : null}
-      <Text className={`text-[13px] font-semibold ${selected ? 'text-white' : 'text-slate-600'}`}>
+      className={`h-10 flex-row items-center gap-1.5 rounded-full px-4 ${selected ? 'bg-accent' : 'bg-card'}`}>
+      {icon ? <Icon name={icon} size={18} color={selected ? T.onAccent : T.muted} /> : null}
+      <Text className={`text-[13px] font-semibold ${selected ? 'text-on-accent' : 'text-muted'}`}>
         {label}
       </Text>
     </PressableScale>
