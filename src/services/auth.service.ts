@@ -7,9 +7,8 @@ import type {
   RefreshResult,
   RegisterInput,
   RegisterResult,
+  UpdateProfileInput,
 } from '@/types/auth.types';
-
-
 
 // Endpoint mengikuti Backend_UKK — src/modules/auth/auth.route.ts (prefix /api/v1/auth).
 export const AuthService = {
@@ -22,6 +21,9 @@ export const AuthService = {
   refreshToken: () => request<RefreshResult>('/auth/refresh-token', { method: 'POST', body: {} }),
 
   profile: (token: string) => request<ProfileResult>('/auth/me', { token }),
+
+  updateProfile: (token: string, input: UpdateProfileInput) =>
+    request<ProfileResult>('/auth/me', { method: 'PATCH', body: input, token }),
 
   logout: (token: string) => request<null>('/auth/logout', { method: 'POST', token }),
 
